@@ -1,13 +1,20 @@
 describe('Cenário 4: Finalização da Compra', () => {
   it('Deve verificar o fluxo de finalização da compra', () => {
-    // Visite a página de produtos (assumindo que a URL seja '/inventory.html' no seu site)
-    cy.visit('https://www.saucedemo.com/inventory.html');
+    // Visita a página de login
+    cy.visit('https://www.saucedemo.com/');
+
+    // Insere o nome de usuário e senha nos campos de login
+    cy.get('#user-name').type('standard_user');
+    cy.get('#password').type('secret_sauce');
+
+    // Clica no botão de login
+    cy.get('#login-button').click();
+
+    // Verifica se o login foi bem-sucedido redirecionando para a página de produtos
+    cy.url().should('include', '/inventory.html');
 
     // Adicione um produto ao carrinho
-    cy.get('.inventory_item')
-      .first()
-      .find('.btn_primary')
-      .click();
+    cy.get('.inventory_item').first().find('.btn_primary').click();
 
     // Vá para o carrinho
     cy.get('.shopping_cart_link').click();
@@ -21,29 +28,15 @@ describe('Cenário 4: Finalização da Compra', () => {
     cy.get('#postal-code').type('12345');
 
     // Continue para a próxima etapa
-    cy.get('.cart_button').click();
-
-    // Escolha um método de pagamento (assumindo que o cartão de crédito é o primeiro método)
-    cy.get('.payment_method_radio').first().check();
-
-    // Preencha os detalhes do cartão de crédito (adapte conforme necessário)
-    cy.get('#card-number').type('1234123412341234');
-    cy.get('#expiration-date').type('12/23');
-    cy.get('#cvv').type('123');
-
-    // Continue para a revisão da compra
-    cy.get('.cart_button').click();
-
-    // Verifique se os produtos selecionados são exibidos corretamente no resumo da compra
-    cy.get('.inventory_item_name').should('contain', 'NomeDoProduto');
+    cy.get('#continue').click();
 
     // Finalize a compra
-    cy.get('.cart_button').click();
+    cy.get('#finish').click();
 
     // Verifique se o recibo final está correto (adapte conforme necessário)
-    cy.get('.complete-header').should('contain', 'Thank you for your order');
+    cy.get('.complete-header').should('contain', 'Thank you for your order!');
 
-    // Limpar o carrinho para testes futuros
-    cy.get('.cart_button').click();
+    // Voltar a Home
+    cy.get('#back-to-products').click();
   });
 });
